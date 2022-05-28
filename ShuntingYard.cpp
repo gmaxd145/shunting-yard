@@ -52,7 +52,6 @@ std::vector<std::string> expParsing(const std::string& input) // can be private 
             continue;
         }
 
-        // TODO: maybe rework opPrior by class Token
         // reading operator
         if (opPrior(std::string(1, input[i])) != -1
             ||
@@ -68,12 +67,14 @@ std::vector<std::string> expParsing(const std::string& input) // can be private 
         }
     }
 
+    // case unclosed brackets
     if (std::count(std::cbegin(output), cend(output), "(")
         != std::count(std::cbegin(output), cend(output), ")"))
     {
                 throw std::invalid_argument("Invalid input");
     }
 
+    // case braces after funcs
     for (auto it = output.begin(); it != output.end();  ++it)
     {
         if (find(funcs, *it))
@@ -88,12 +89,6 @@ std::vector<std::string> expParsing(const std::string& input) // can be private 
             }
         }
     }
-
-
-//    if (!checkFuncs(output))
-//    {
-//        throw std::invalid_argument("Invalid input");
-//    }
 
     return output;
 }
@@ -285,18 +280,6 @@ double calculateRPN(std::queue<std::string> tokens)
 
     return values.top();
 }
-
-//bool checkFuncs(std::vector<std::string>& v)
-//{
-//    std::vector<std::string> funcs = {"sin", "cos", "tg", "ctg"}; // can be field of class
-//    for (auto it = v.begin(); it != v.end();  ++it)
-//    {
-//        if (find(funcs, *it) &&  it + 1 < v.end() - 1)
-//        {
-//
-//        }
-//    }
-//}
 
 double getAndPop(std::stack<double>& st)
 {
