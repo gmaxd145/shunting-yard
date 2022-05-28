@@ -4,8 +4,20 @@
 int main() {
     try
     {
-        std::string input = "17+1/2-(2+3)/(6/7^2)*17-9*(6*(6+sin5)) + cos6^2";
+//        std::string input = "--1";
+//        std::string input = "1--";
+        std::string input = "(-1)-2*((-3)-(-4)-5+(-6))-7";
+
+//        std::string input = "17+2*SiN";
+//        std::string input = "17+2*SiN5)";
+//        std::string input = "17+2*SiN(5";
+//        std::string input = "17+2*SiN(5)";
+
+
 //        std::string input = "(sin(9-2)^2^1-6/7)^(13-9)";
+
+//        std::string input = "2^3^4";
+
         printVector(expParsing(input));
         auto rpnInput = toRPN(input);
         printQueue(rpnInput);

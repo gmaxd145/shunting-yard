@@ -68,18 +68,47 @@ std::vector<std::string> expParsing(const std::string& input) // can be private 
         }
     }
 
+    if (std::count(std::cbegin(output), cend(output), "(")
+        != std::count(std::cbegin(output), cend(output), ")"))
+    {
+                throw std::invalid_argument("Invalid input");
+    }
+
+    for (auto it = output.begin(); it != output.end();  ++it)
+    {
+        if (find(funcs, *it))
+        {
+            if ( it == output.end() - 1)
+            {
+                throw std::invalid_argument("Invalid input");
+            }
+            if (*(it + 1) != "(")
+            {
+                throw std::invalid_argument("Invalid input");
+            }
+        }
+    }
+
+
+//    if (!checkFuncs(output))
+//    {
+//        throw std::invalid_argument("Invalid input");
+//    }
+
     return output;
 }
+
 
 std::queue<std::string> toRPN(const std::string& input)
 {
     std::vector<std::string> funcs = {"sin", "cos", "tg", "ctg"}; // can be field of class
+    std::vector<std::string> leftAs = {"^"}; // can be field of class
 
     std::stack<std::string> opStack;
     std::queue<std::string> output;
 
     std::vector<std::string> tokens  = expParsing(input);
-    for (auto it = tokens.begin(); it != tokens.end();  ++it )
+    for (auto it = tokens.begin(); it != tokens.end();  ++it)
     {
         auto& tk = *it;
 
@@ -91,7 +120,7 @@ std::queue<std::string> toRPN(const std::string& input)
         }
 
         // function case
-        if (find(funcs, tk))
+        if (myIsalpha(tk[0]))
         {
             opStack.push(tk);
             continue;
@@ -102,19 +131,26 @@ std::queue<std::string> toRPN(const std::string& input)
             ||
             isBrackets(tk))
         {
-            // negative number case
-//            if (it + 1 < tokens.end() - 1) // && ....
-//            {
-//                auto nextTk = *(it + 1);
-//                auto prevTk = *(it - 1);
-//                if (!opStack.empty())
-//                {
-//                    if (prevTk == "(" && tk == "-" && myIsdigit(nextTk[0]))
-//                    {
-//                        output.push("0");
-//                    }
-//                }
-//            }
+            // negative number cases
+            if (it + 1 < tokens.end() - 1)
+            {
+                auto nextTk = *(it + 1);
+                if ( it != tokens.begin()) // case (-1...
+                {
+                    auto prevTk = *(it - 1);
+                    if (!opStack.empty())
+                    {
+                        if (prevTk == "(" && tk == "-" && myIsdigit(nextTk[0]))
+                        {
+                            output.push("0");
+                        }
+                    }
+                }
+                else if (tk == "-" && nextTk == "(") // case -(...
+                {
+                    output.push("0");
+                }
+            }
 
             if (!opStack.empty())
             {
@@ -122,7 +158,7 @@ std::queue<std::string> toRPN(const std::string& input)
                     && !isBrackets(tk)
                     && !isBrackets(opStack.top()))
                 {
-                    if (opStack.top() == "^" && tk == "^")
+                    if (find(leftAs, opStack.top()) && find(leftAs, tk))
                     {
                         opStack.push(tk);
                         continue;
@@ -241,8 +277,26 @@ double calculateRPN(std::queue<std::string> tokens)
             continue;
         }
     }
+
+    if (values.size() != 1)
+    {
+        throw std::invalid_argument("Invalid input");
+    }
+
     return values.top();
 }
+
+//bool checkFuncs(std::vector<std::string>& v)
+//{
+//    std::vector<std::string> funcs = {"sin", "cos", "tg", "ctg"}; // can be field of class
+//    for (auto it = v.begin(); it != v.end();  ++it)
+//    {
+//        if (find(funcs, *it) &&  it + 1 < v.end() - 1)
+//        {
+//
+//        }
+//    }
+//}
 
 double getAndPop(std::stack<double>& st)
 {
