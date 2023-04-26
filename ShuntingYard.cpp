@@ -3,7 +3,7 @@
 std::vector<std::string> expParsing(const std::string& input) // can be private method of class
 {
     std::vector<std::string> output;
-    std::vector<std::string> funcs = {"sin", "cos", "tg", "ctg"};  // can be field of class
+    std::vector<std::string> funcs = {"sin", "cos", "tg", "ctg", "acos", "asin", "atg", "ctg", "log2"};  // can be field of class
 
     for (int i = 0; i < input.size(); ++i)
     {
@@ -96,7 +96,7 @@ std::vector<std::string> expParsing(const std::string& input) // can be private 
 
 std::queue<std::string> toRPN(const std::string& input)
 {
-    std::vector<std::string> funcs = {"sin", "cos", "tg", "ctg"}; // can be field of class
+    std::vector<std::string> funcs = {"sin", "cos", "tg", "ctg", "acos", "asin", "atg", "ctg", "log2"}; // can be field of class
     std::vector<std::string> leftAs = {"^"}; // can be field of class
 
     std::stack<std::string> opStack;
@@ -230,7 +230,22 @@ double calculateRPN(std::queue<std::string> tokens)
             values.push(1 / tan(getAndPop(values)));
             continue;
         }
-
+        if (tk == "acos")
+        {
+            values.push(acos(getAndPop(values)));
+        }
+        if (tk == "asin")
+        {
+            values.push(asin(getAndPop(values)));
+        }
+        if (tk == "atg")
+        {
+            values.push(atan(getAndPop(values)));
+        }
+        if (tk == "ctg")
+        {
+            values.push(1.0 / tan((getAndPop(values))));
+        }
         if (myIsdigit(tk[0]))
         {
             values.push(std::stod(tk));

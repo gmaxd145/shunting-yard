@@ -1,3 +1,5 @@
+// rpm пакет debian пакет
+
 #include "ShuntingYard.h"
 #include <iostream>
 
@@ -6,7 +8,7 @@ int main() {
     {
 //        std::string input = "--1";
 //        std::string input = "1--";
-        std::string input = "(-1)-2*((-3)-(-4)-5+(-6))-7";
+        std::string input = "9^(3/2)";
 
 //        std::string input = "17+2*SiN";
 //        std::string input = "17+2*SiN5)";
